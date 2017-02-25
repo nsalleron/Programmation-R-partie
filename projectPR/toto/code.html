@@ -1,0 +1,635 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+  <title></title>
+  <meta http-equiv="content-type" content="text/html; charset=None">
+  <style type="text/css">
+td.linenos { background-color: #f0f0f0; padding-right: 10px; }
+span.lineno { background-color: #f0f0f0; padding: 0 5px 0 5px; }
+pre { line-height: 125%; }
+body .hll { background-color: #ffffcc }
+body  { background: #f8f8f8; }
+body .c { color: #408080; font-style: italic } /* Comment */
+body .err { border: 1px solid #FF0000 } /* Error */
+body .k { color: #008000; font-weight: bold } /* Keyword */
+body .o { color: #666666 } /* Operator */
+body .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+body .cp { color: #BC7A00 } /* Comment.Preproc */
+body .c1 { color: #408080; font-style: italic } /* Comment.Single */
+body .cs { color: #408080; font-style: italic } /* Comment.Special */
+body .gd { color: #A00000 } /* Generic.Deleted */
+body .ge { font-style: italic } /* Generic.Emph */
+body .gr { color: #FF0000 } /* Generic.Error */
+body .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+body .gi { color: #00A000 } /* Generic.Inserted */
+body .go { color: #888888 } /* Generic.Output */
+body .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+body .gs { font-weight: bold } /* Generic.Strong */
+body .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+body .gt { color: #0044DD } /* Generic.Traceback */
+body .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+body .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+body .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+body .kp { color: #008000 } /* Keyword.Pseudo */
+body .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+body .kt { color: #B00040 } /* Keyword.Type */
+body .m { color: #666666 } /* Literal.Number */
+body .s { color: #BA2121 } /* Literal.String */
+body .na { color: #7D9029 } /* Name.Attribute */
+body .nb { color: #008000 } /* Name.Builtin */
+body .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+body .no { color: #880000 } /* Name.Constant */
+body .nd { color: #AA22FF } /* Name.Decorator */
+body .ni { color: #999999; font-weight: bold } /* Name.Entity */
+body .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+body .nf { color: #0000FF } /* Name.Function */
+body .nl { color: #A0A000 } /* Name.Label */
+body .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+body .nt { color: #008000; font-weight: bold } /* Name.Tag */
+body .nv { color: #19177C } /* Name.Variable */
+body .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+body .w { color: #bbbbbb } /* Text.Whitespace */
+body .mf { color: #666666 } /* Literal.Number.Float */
+body .mh { color: #666666 } /* Literal.Number.Hex */
+body .mi { color: #666666 } /* Literal.Number.Integer */
+body .mo { color: #666666 } /* Literal.Number.Oct */
+body .sb { color: #BA2121 } /* Literal.String.Backtick */
+body .sc { color: #BA2121 } /* Literal.String.Char */
+body .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+body .s2 { color: #BA2121 } /* Literal.String.Double */
+body .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+body .sh { color: #BA2121 } /* Literal.String.Heredoc */
+body .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+body .sx { color: #008000 } /* Literal.String.Other */
+body .sr { color: #BB6688 } /* Literal.String.Regex */
+body .s1 { color: #BA2121 } /* Literal.String.Single */
+body .ss { color: #19177C } /* Literal.String.Symbol */
+body .bp { color: #008000 } /* Name.Builtin.Pseudo */
+body .vc { color: #19177C } /* Name.Variable.Class */
+body .vg { color: #19177C } /* Name.Variable.Global */
+body .vi { color: #19177C } /* Name.Variable.Instance */
+body .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+  </style>
+</head>
+<body>
+<h2></h2>
+
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>stdio.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>signal.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>sys/wait.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>errno.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>stdlib.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>unistd.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>sys/types.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>sys/socket.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>netinet/<span style="color: #008000; font-weight: bold">in</span><span style="color: #008000">.</span>h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>fcntl.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span><span style="color: #B00040">string</span><span style="color: #008000">.</span>h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>pthread.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>sys/types.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>sys/stat.h<span style="color: #666666">&gt;</span>
+<span style="color: #19177C">#include</span> <span style="color: #666666">&lt;</span>arpa/inet.h<span style="color: #666666">&gt;</span>
+
+<span style="color: #19177C">#define</span> TAILLE <span style="color: #666666">1024</span>
+struct sigaction action;
+pthread_t pidThread;
+int pidFils;
+struct sockaddr_in adr;
+socklen_t adr_len<span style="color: #666666"> =</span> sizeof(struct sockaddr_in);
+int connexion, n;
+int <span style="color: #666666">*</span>connexionToThread;
+int socketfd, mimefd, logfd;
+char NOM_REPERTOIRE<span style="border: 1px solid #FF0000">[</span>TAILLE<span style="color: #BC7A00">]</span>;
+int MAXCLIENT = 10;
+char CWD<span style="color: #BC7A00">[</span>TAILLE<span style="color: #BC7A00">]</span>;
+char *STD_REP = &quot;HTTP/1.1 &quot;;
+
+pthread_mutex_t mutexConnexion = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutexLogFile = PTHREAD_MUTEX_INITIALIZER;
+
+int nbTotalConnexion = 0;
+
+struct infoRequete{
+	int connectfd;
+	struct in_addr ipAddr;
+	pid_t pid;
+	time_t curtime;
+	pthread_t pthreadid;
+	char *line_request;
+	char *ret_code;
+	int total_size_send;
+};
+
+struct infoRequete *info;
+
+
+char *getMimeInfo(char *PATH_FILE);
+void recordToLogFile(struct infoRequete *infoRequete);
+void traitSigAlarm(int sig);
+
+
+
+
+void funcTraitement(void *arg){
+	
+	/* R√©cup√©ration des informations */
+	struct infoRequete info;
+	info = (*(struct infoRequete*)arg);
+	info.pthreadid = pthread_self();
+	info.total_size_send = 0;
+	int connect = info.connectfd;
+	free(arg);
+	
+	//sleep(1);
+	
+	printf(&quot;%lu | DEBUT TRAITEMENT de %d\n&quot;,(long)pthread_self(),connect);
+	
+	/*Descripteur de fichier */
+	int fichierfd;
+	
+	/* Pipe du thread */
+	int localPipe<span style="color: #BC7A00">[</span><span style="color: #666666">2</span><span style="color: #BC7A00">]</span>;
+	int filsPipe<span style="color: #BC7A00">[</span><span style="color: #666666">2</span><span style="color: #BC7A00">]</span>;
+	
+	/*Integer erreur */
+	int bErreur = 0;
+	int bRepertory = 0;
+	int bExecutable = 0;
+	
+	/* Commande brut r√©cup√©r√© par le serveur */
+	char CMD_BRUT<span style="color: #BC7A00">[</span>TAILLE<span style="color: #BC7A00">]</span>;
+	
+	/* Commande apr√®s strtok */
+	char *CMD;
+	char *FILE;
+	char *HTTPVER;
+	
+	/* fichier requis */
+	char PATH_FILE<span style="color: #BC7A00">[</span>TAILLE<span style="color: #BC7A00">]</span>;
+	
+	/* V√©rification du fichier */
+	struct stat statFile;
+	
+	/* ENOENT si fichier inacessible */
+	/* EACCES si droits insuffisant */
+	int Errno; 
+	
+	/* Les donn√©es de la r√©ponse */
+	char DATA<span style="color: #BC7A00">[</span><span style="color: #666666">2*</span>TAILLE<span style="color: #BC7A00">]</span>;
+	char DATA_FILE<span style="color: #BC7A00">[</span><span style="color: #666666">2*</span>TAILLE<span style="color: #BC7A00">]</span>;
+	
+	/* Initialisation des variables */
+	memset(CMD_BRUT,0,TAILLE);
+	memset(DATA,0,2*TAILLE);
+	
+	//Lecture de la requ√™te
+	n = read(connect,<span style="color: #999999; font-weight: bold">&amp;CMD_BRUT,TAILLE);</span>
+	if (n <span style="color: #008000; font-weight: bold">&lt; 0</span><span style="border: 1px solid #FF0000">)</span>
+		<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">thread</span> <span style="color: #7D9029">read</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+	
+	<span style="color: #7D9029">CMD =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">strtok(CMD_BRUT,</span> <span style="border: 1px solid #FF0000">&quot;</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+	<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">lu</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">CMD</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">s</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">taille</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">lu</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,(</span><span style="color: #7D9029">long</span><span style="border: 1px solid #FF0000">)</span><span style="color: #7D9029">pthread_self</span><span style="border: 1px solid #FF0000">(),</span><span style="color: #7D9029">CMD</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">strlen</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">CMD</span><span style="border: 1px solid #FF0000">));</span>
+	<span style="color: #7D9029">FILE =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">strtok(NULL,</span> <span style="border: 1px solid #FF0000">&quot;</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+	<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">lu</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">NOM</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">s</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">taille</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">lu</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,(</span><span style="color: #7D9029">long</span><span style="border: 1px solid #FF0000">)</span><span style="color: #7D9029">pthread_self</span><span style="border: 1px solid #FF0000">(),</span><span style="color: #7D9029">FILE</span><span style="border: 1px solid #FF0000">,</span><span style="color: #7D9029">strlen</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">FILE</span><span style="border: 1px solid #FF0000">));</span>
+	<span style="color: #7D9029">HTTPVER =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">strtok(NULL,</span> <span style="border: 1px solid #FF0000">&quot;\</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">&quot;);</span>
+	<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">lu</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">HTTPVER</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">s</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">taille</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">lu</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,(</span><span style="color: #7D9029">long</span><span style="border: 1px solid #FF0000">)</span><span style="color: #7D9029">pthread_self</span><span style="border: 1px solid #FF0000">(),</span><span style="color: #7D9029">HTTPVER</span><span style="border: 1px solid #FF0000">,</span><span style="color: #7D9029">strlen</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">HTTPVER</span><span style="border: 1px solid #FF0000">));</span>
+	
+	<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Mise</span> <span style="border: 1px solid #FF0000">√†</span> <span style="color: #7D9029">jour</span> <span style="color: #7D9029">des</span> <span style="color: #7D9029">informations</span> <span style="border: 1px solid #FF0000">*/</span>
+	<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">line_request =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">malloc((strlen(CMD)+strlen(FILE)+strlen(HTTPVER)+1)*sizeof(char));</span>
+	<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">ret_code =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">malloc(sizeof(char)*4);</span>
+	<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">line_request</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">CMD</span><span style="border: 1px solid #FF0000">);</span>
+	<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">line_request</span><span style="color: #BC7A00">[</span>strlen(CMD)<span style="color: #BC7A00">]</span><span style="color: #7D9029"> =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">&#39; &#39;</span><span style="border: 1px solid #FF0000">;</span>
+	<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">line_request</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">FILE</span><span style="border: 1px solid #FF0000">);</span>
+	<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">line_request</span><span style="color: #BC7A00">[</span>strlen(CMD)<span style="color: #666666">+</span>strlen(<span style="color: #008000">FILE</span>)<span style="color: #666666">+1</span><span style="color: #BC7A00">]</span><span style="color: #7D9029"> =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">&#39; &#39;</span><span style="border: 1px solid #FF0000">;</span>
+	<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">line_request</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">HTTPVER</span><span style="border: 1px solid #FF0000">);</span>
+	
+	<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Construction</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">chemin</span> <span style="color: #7D9029">avec</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">pertoire</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">travail</span> <span style="border: 1px solid #FF0000">*/</span>
+	<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">PATH_FILE</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">CWD</span><span style="border: 1px solid #FF0000">);</span>
+	<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">PATH_FILE</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">FILE</span><span style="border: 1px solid #FF0000">);</span>
+	
+	<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">GET</span> <span style="color: #7D9029">FILE</span> <span style="border: 1px solid #FF0000">*/</span>
+	<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(!</span><span style="color: #7D9029">strcmp</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">CMD</span><span style="border: 1px solid #FF0000">,&quot;</span><span style="color: #7D9029">GET</span><span style="border: 1px solid #FF0000">&quot;)){</span>
+		
+				
+		<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Le</span> <span style="color: #7D9029">fichier</span> <span style="color: #7D9029">est</span> <span style="color: #7D9029">accessible</span> <span style="border: 1px solid #FF0000">*/</span>
+		<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">((</span><span style="color: #7D9029">fichierfd =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">open(PATH_FILE,</span> <span style="color: #7D9029">O_RDONLY</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">S_IRUSR</span><span style="border: 1px solid #FF0000">|</span><span style="color: #7D9029">S_IRGRP</span><span style="border: 1px solid #FF0000">|</span><span style="color: #7D9029">S_IROTH</span><span style="border: 1px solid #FF0000">))</span> <span style="border: 1px solid #FF0000">==</span> <span style="color: #7D9029">-1</span><span style="border: 1px solid #FF0000">){</span>
+			<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">open</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+			<span style="color: #7D9029">bErreur =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">1;</span>
+			<span style="color: #7D9029">Errno =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">errno;</span>
+		<span style="border: 1px solid #FF0000">}</span>
+		
+		<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(!</span><span style="color: #7D9029">bErreur</span><span style="border: 1px solid #FF0000">){</span>
+			
+			<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">V</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">rification</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">fichier</span> <span style="border: 1px solid #FF0000">*/</span>
+			<span style="color: #7D9029">if</span> <span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">stat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">PATH_FILE</span><span style="border: 1px solid #FF0000">,&amp;</span><span style="color: #7D9029">statFile</span><span style="border: 1px solid #FF0000">)</span> <span style="border: 1px solid #FF0000">==</span> <span style="color: #7D9029">-1</span><span style="border: 1px solid #FF0000">){</span>
+				<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">Probl</span><span style="border: 1px solid #FF0000">√®</span><span style="color: #7D9029">me</span> <span style="color: #7D9029">dans</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">fstat</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;);</span>
+			<span style="border: 1px solid #FF0000">}</span>
+			<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">R</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">pertoire</span> <span style="border: 1px solid #FF0000">*/</span>
+			<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">S_ISDIR</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">statFile</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">st_mode</span><span style="border: 1px solid #FF0000">)){</span>
+				<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">It</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">s</span> <span style="color: #7D9029">a</span> <span style="color: #7D9029">repertory</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;);</span>
+				<span style="color: #7D9029">bRepertory =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">1;</span>
+			<span style="border: 1px solid #FF0000">}</span>
+			
+			<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(!</span><span style="color: #7D9029">bRepertory</span><span style="border: 1px solid #FF0000">){</span>
+	
+				<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(!</span><span style="color: #7D9029">access</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">PATH_FILE</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">X_OK</span><span style="border: 1px solid #FF0000">)){</span>
+					<span style="color: #7D9029">bExecutable =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">1;</span>
+				<span style="border: 1px solid #FF0000">}</span>
+				<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">Valeur</span> <span style="color: #7D9029">bExecutable</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">d</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">fichier</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">s</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,</span><span style="color: #7D9029">bExecutable</span><span style="border: 1px solid #FF0000">,</span><span style="color: #7D9029">PATH_FILE</span><span style="border: 1px solid #FF0000">);</span>
+				
+				<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(!</span><span style="color: #7D9029">bExecutable</span><span style="border: 1px solid #FF0000">){</span>
+					<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Construction</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">la</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">ponse</span> <span style="border: 1px solid #FF0000">*/</span>
+					<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">STD_REP</span><span style="border: 1px solid #FF0000">);</span>
+					<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">200</span> <span style="color: #7D9029">OK</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">nContent-Type:</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+					
+					<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">ret_code =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">&quot;200&quot;</span><span style="border: 1px solid #FF0000">;</span>
+					
+					<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">retcode</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">s</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,</span><span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">ret_code</span><span style="border: 1px solid #FF0000">);</span>
+					
+					<span style="color: #7D9029">char</span> <span style="border: 1px solid #FF0000">*</span><span style="color: #7D9029">strtType =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">getMimeInfo(PATH_FILE);</span>
+					
+					<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">strtType</span><span style="border: 1px solid #FF0000">);</span>
+					<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;\</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;);</span> <span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Caract</span><span style="border: 1px solid #FF0000">√®</span><span style="color: #7D9029">re</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">fermeture</span> <span style="border: 1px solid #FF0000">*/</span>
+					<span style="color: #7D9029">free</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">strtType</span><span style="border: 1px solid #FF0000">);</span>	<span style="border: 1px solid #FF0000">//</span><span style="color: #7D9029">On</span> <span style="color: #7D9029">lib</span><span style="border: 1px solid #FF0000">√®</span><span style="color: #7D9029">re</span> <span style="color: #7D9029">les</span> <span style="color: #7D9029">caract</span><span style="border: 1px solid #FF0000">√®</span><span style="color: #7D9029">res</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">TAS</span>
+					
+					<span style="border: 1px solid #FF0000">//</span><span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">DATA</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">s</span><span style="border: 1px solid #FF0000">&quot;,</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">);</span>
+					<span style="color: #7D9029">while</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">1</span><span style="border: 1px solid #FF0000">){</span>
+						<span style="color: #7D9029">n =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">read(fichierfd,</span> <span style="color: #7D9029">DATA_FILE</span><span style="border: 1px solid #FF0000">,</span><span style="color: #7D9029">TAILLE</span><span style="border: 1px solid #FF0000">);</span>
+						<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">lu</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">Impression</span> <span style="color: #7D9029">data</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">d</span> <span style="color: #7D9029">sur</span> <span style="color: #7D9029">socket</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,(</span><span style="color: #7D9029">long</span><span style="border: 1px solid #FF0000">)</span><span style="color: #7D9029">pthread_self</span><span style="border: 1px solid #FF0000">(),</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">,</span><span style="color: #7D9029">connect</span><span style="border: 1px solid #FF0000">);</span>
+						<span style="color: #7D9029">if</span> <span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">n</span> <span style="border: 1px solid #FF0000">&lt;</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">)</span>
+							<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">read</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+						<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">n =</span><span style="color: #BA2121">=</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">)</span>
+							<span style="color: #7D9029">break</span><span style="border: 1px solid #FF0000">;</span>
+						<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">DATA_FILE</span><span style="border: 1px solid #FF0000">);</span>
+						<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Ne</span> <span style="color: #7D9029">pas</span> <span style="color: #7D9029">oublier</span> <span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">effacer</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">buffer</span> <span style="border: 1px solid #FF0000">*/</span>
+						<span style="color: #7D9029">memset</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA_FILE</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">TAILLE</span><span style="border: 1px solid #FF0000">);</span>
+					<span style="border: 1px solid #FF0000">}</span>
+					<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">total_size_send</span> <span style="border: 1px solid #FF0000">+=</span> <span style="color: #7D9029">write</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">connect</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">strlen</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">));</span>
+				<span style="border: 1px solid #FF0000">}</span><span style="color: #7D9029">else</span><span style="border: 1px solid #FF0000">{</span>
+					<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">d</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">ex</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cution</span> <span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,</span><span style="color: #7D9029">getpid</span><span style="border: 1px solid #FF0000">());</span>
+					<span style="color: #7D9029">int</span> <span style="color: #7D9029">returnValue =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">0;</span>
+					<span style="color: #7D9029">pipe</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">localPipe</span><span style="border: 1px solid #FF0000">);</span> <span style="border: 1px solid #FF0000">//</span><span style="color: #7D9029">Cr</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">ation</span> <span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">un</span> <span style="color: #7D9029">tube</span> <span style="color: #7D9029">pour</span> <span style="color: #7D9029">communication</span> <span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cup</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">ration</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">sultat</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">fils</span><span style="border: 1px solid #FF0000">);</span>
+					
+					<span style="border: 1px solid #FF0000">//</span><span style="color: #7D9029">Premier</span> <span style="color: #7D9029">fils</span> <span style="color: #7D9029">handler</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">l</span><span style="border: 1px solid #FF0000">&#39;√©</span><span style="color: #7D9029">criture</span> <span style="color: #7D9029">et</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">signal</span>
+					<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">((</span><span style="color: #7D9029">pidFils =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">fork())</span> <span style="border: 1px solid #FF0000">==</span> <span style="color: #7D9029">-1</span><span style="border: 1px solid #FF0000">){</span>
+						<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">fork</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+						<span style="color: #7D9029">exit</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">-1</span><span style="border: 1px solid #FF0000">);</span>
+					<span style="border: 1px solid #FF0000">}</span>
+					<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">pidFils =</span><span style="color: #BA2121">=</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">){</span>
+						<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">d</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">ex</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cution</span> <span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,</span><span style="color: #7D9029">getpid</span><span style="border: 1px solid #FF0000">());</span>
+						<span style="color: #7D9029">pipe</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">filsPipe</span><span style="border: 1px solid #FF0000">);</span>
+						<span style="color: #7D9029">signal</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">SIGALRM</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">traitSigAlarm</span><span style="border: 1px solid #FF0000">);</span>
+						
+						<span style="border: 1px solid #FF0000">//</span><span style="color: #7D9029">Second</span> <span style="color: #7D9029">fils</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cup</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">ration</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">la</span> <span style="color: #7D9029">valeur</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">retour</span> <span style="color: #7D9029">et</span> <span style="color: #7D9029">attente</span> <span style="color: #7D9029">des</span> <span style="color: #7D9029">10</span> <span style="color: #7D9029">secondes</span>
+						<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">((</span><span style="color: #7D9029">pidFils =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">fork())</span> <span style="border: 1px solid #FF0000">==</span> <span style="color: #7D9029">-1</span><span style="border: 1px solid #FF0000">){</span>
+							<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">fork</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+							<span style="color: #7D9029">exit</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">-1</span><span style="border: 1px solid #FF0000">);</span>
+						<span style="border: 1px solid #FF0000">}</span>
+						<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">pidFils =</span><span style="color: #BA2121">=</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">){</span>
+							<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">d</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">ex</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cution</span> <span style="color: #7D9029">finale</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">fichier</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">s</span> <span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,</span><span style="color: #7D9029">getpid</span><span style="border: 1px solid #FF0000">(),</span><span style="color: #7D9029">PATH_FILE</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">dup2</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">filsPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">1</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">STDOUT_FILENO</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">dup2</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">filsPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">1</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">STDERR_FILENO</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">close</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">filsPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">0</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">close</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">filsPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">1</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">execl</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">PATH_FILE</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">PATH_FILE</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">NULL</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">execlp</span><span style="border: 1px solid #FF0000">&quot;);</span>
+							<span style="color: #7D9029">exit</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">-1</span><span style="border: 1px solid #FF0000">);</span>	
+						<span style="border: 1px solid #FF0000">}</span><span style="color: #7D9029">else</span><span style="border: 1px solid #FF0000">{</span>
+							<span style="color: #7D9029">dup2</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">localPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">1</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">STDOUT_FILENO</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">dup2</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">localPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">1</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">STDERR_FILENO</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">close</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">filsPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">1</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">alarm</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">10</span><span style="border: 1px solid #FF0000">);</span> <span style="border: 1px solid #FF0000">//</span><span style="color: #7D9029">Mise</span> <span style="color: #7D9029">en</span> <span style="color: #7D9029">place</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">l</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">alarm</span><span style="border: 1px solid #FF0000">;</span>
+							<span style="color: #7D9029">int</span> <span style="color: #7D9029">valEcrite =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">0;</span>
+							<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Attente</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">fils</span> <span style="border: 1px solid #FF0000">*/</span>
+							<span style="color: #7D9029">waitpid</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">pidFils</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&amp;</span><span style="color: #7D9029">returnValue</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">);</span>
+							
+							<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Selon</span> <span style="color: #7D9029">la</span> <span style="color: #7D9029">valeur</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">retour</span> <span style="border: 1px solid #FF0000">*/</span>
+							<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">returnValue=</span><span style="color: #BA2121">=0){</span>
+								
+								<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Construction</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">la</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">ponse</span> <span style="border: 1px solid #FF0000">*/</span>
+								<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">STD_REP</span><span style="border: 1px solid #FF0000">);</span>
+								<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">200</span> <span style="color: #7D9029">OK</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">nContent-Type:</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+								
+								<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">ret_code =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">&quot;200&quot;</span><span style="border: 1px solid #FF0000">;</span>
+								
+								<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">A</span> <span style="color: #7D9029">RECHERCHER</span> <span style="color: #7D9029">si</span> <span style="color: #7D9029">pas</span> <span style="color: #7D9029">mieux</span> <span style="border: 1px solid #FF0000">*/</span>
+								<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">text</span><span style="border: 1px solid #FF0000">/</span><span style="color: #7D9029">plain</span><span style="border: 1px solid #FF0000">&quot;);</span>
+								<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;\</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;);</span> <span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Caract</span><span style="border: 1px solid #FF0000">√®</span><span style="color: #7D9029">re</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">fermeture</span> <span style="border: 1px solid #FF0000">*/</span>
+								
+								<span style="color: #7D9029">while</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">1</span><span style="border: 1px solid #FF0000">){</span>
+									<span style="color: #7D9029">n =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">read(filsPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">0</span><span style="color: #BC7A00">]</span><span style="color: #BA2121">,</span> <span style="color: #7D9029">DATA_FILE</span><span style="border: 1px solid #FF0000">,</span><span style="color: #7D9029">TAILLE</span><span style="border: 1px solid #FF0000">);</span>
+									<span style="border: 1px solid #FF0000">//</span><span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">lu</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">Impression</span> <span style="color: #7D9029">data</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">d</span> <span style="color: #7D9029">sur</span> <span style="color: #7D9029">socket</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,(</span><span style="color: #7D9029">long</span><span style="border: 1px solid #FF0000">)</span><span style="color: #7D9029">getpid</span><span style="border: 1px solid #FF0000">(),</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">,</span><span style="color: #7D9029">connect</span><span style="border: 1px solid #FF0000">);</span>
+									<span style="color: #7D9029">if</span> <span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">n</span> <span style="border: 1px solid #FF0000">&lt;</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">)</span>
+										<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">read</span> <span style="border: 1px solid #FF0000">&quot;);</span>
+									<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">n =</span><span style="color: #BA2121">=</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">)</span>
+										<span style="color: #7D9029">break</span><span style="border: 1px solid #FF0000">;</span>
+									<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">DATA_FILE</span><span style="border: 1px solid #FF0000">);</span>
+									<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Ne</span> <span style="color: #7D9029">pas</span> <span style="color: #7D9029">oublier</span> <span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">effacer</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">buffer</span> <span style="border: 1px solid #FF0000">*/</span>
+									<span style="color: #7D9029">memset</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA_FILE</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">TAILLE</span><span style="border: 1px solid #FF0000">);</span>
+								<span style="border: 1px solid #FF0000">}</span>
+								<span style="border: 1px solid #FF0000">/*</span><span style="color: #7D9029">Ecriture</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">sultat</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">la</span> <span style="color: #7D9029">commande</span> <span style="border: 1px solid #FF0000">*/</span>
+								<span style="color: #7D9029">valEcrite =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">write(connect,</span> <span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">strlen</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">));</span>
+								<span style="color: #7D9029">close</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">connect</span><span style="border: 1px solid #FF0000">);</span>
+								
+								<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Technique</span> <span style="color: #7D9029">pour</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cup</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">rer</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">code</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">retour</span> <span style="border: 1px solid #FF0000">√†</span> <span style="color: #7D9029">3</span> <span style="color: #7D9029">chiffres</span> <span style="border: 1px solid #FF0000">*/</span>
+								<span style="color: #7D9029">write</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">STDOUT_FILENO</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">200</span><span style="border: 1px solid #FF0000">&quot;</span> <span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">sizeof</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">200</span><span style="border: 1px solid #FF0000">&quot;));</span>
+							<span style="border: 1px solid #FF0000">}</span><span style="color: #7D9029">else</span> <span style="border: 1px solid #FF0000">{</span>
+								<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Technique</span> <span style="color: #7D9029">pour</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cup</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">rer</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">code</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">retour</span> <span style="border: 1px solid #FF0000">√†</span> <span style="color: #7D9029">3</span> <span style="color: #7D9029">chiffres</span> <span style="border: 1px solid #FF0000">*/</span>
+								<span style="color: #7D9029">write</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">STDOUT_FILENO</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">500</span><span style="border: 1px solid #FF0000">&quot;</span> <span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">sizeof</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">500</span><span style="border: 1px solid #FF0000">&quot;));</span>
+							<span style="border: 1px solid #FF0000">}</span>	
+							
+							<span style="color: #7D9029">write</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">STDOUT_FILENO</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&amp;</span><span style="color: #7D9029">valEcrite</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">sizeof</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">int</span><span style="border: 1px solid #FF0000">));</span>
+							<span style="color: #7D9029">exit</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">returnValue</span><span style="border: 1px solid #FF0000">);</span>
+						<span style="border: 1px solid #FF0000">}</span>
+					<span style="border: 1px solid #FF0000">}</span><span style="color: #7D9029">else</span><span style="border: 1px solid #FF0000">{</span>	<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">C</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">est</span> <span style="color: #7D9029">lui</span> <span style="color: #7D9029">qui</span> <span style="color: #7D9029">doit</span> <span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">crire</span> <span style="color: #7D9029">sur</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">socket</span> <span style="border: 1px solid #FF0000">*/</span>
+						<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">d</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">ex</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cution</span> <span style="color: #7D9029">thread</span> <span style="color: #7D9029">originel</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,</span><span style="color: #7D9029">getpid</span><span style="border: 1px solid #FF0000">());</span>
+						
+						<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Technique</span> <span style="color: #7D9029">pour</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cup</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">rer</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">code</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">retour</span> <span style="border: 1px solid #FF0000">√†</span> <span style="color: #7D9029">3</span> <span style="color: #7D9029">chiffres</span> <span style="border: 1px solid #FF0000">*/</span>
+						<span style="color: #7D9029">char</span> <span style="border: 1px solid #FF0000">*</span><span style="color: #7D9029">ret_code</span><span style="border: 1px solid #FF0000">;</span>
+						<span style="color: #7D9029">int</span> <span style="border: 1px solid #FF0000">*</span><span style="color: #7D9029">val_Ecrite</span><span style="border: 1px solid #FF0000">;</span>
+						<span style="color: #7D9029">ret_code =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">malloc(sizeof(char)*3);</span>
+						<span style="color: #7D9029">val_Ecrite =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">malloc(sizeof(int));</span>
+						
+						<span style="color: #7D9029">close</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">localPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">1</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">);</span>
+						<span style="color: #7D9029">waitpid</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">pidFils</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&amp;</span><span style="color: #7D9029">returnValue</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">);</span>
+						<span style="color: #7D9029">read</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">localPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">0</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">ret_code</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">sizeof</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">ret_code</span><span style="border: 1px solid #FF0000">));</span>
+						<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">ret_code</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">s</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,</span><span style="color: #7D9029">ret_code</span><span style="border: 1px solid #FF0000">);</span>
+						
+						<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">returnValue=</span><span style="color: #BA2121">=0</span> <span style="border: 1px solid #FF0000">&amp;&amp;</span> <span style="border: 1px solid #FF0000">!</span><span style="color: #7D9029">strcmp</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">ret_code</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">200</span><span style="border: 1px solid #FF0000">&quot;)){</span>
+							<span style="color: #7D9029">int</span> <span style="color: #7D9029">val =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">0;</span>
+							<span style="color: #7D9029">read</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">localPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">0</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&amp;</span><span style="color: #7D9029">val_Ecrite</span><span style="border: 1px solid #FF0000">,</span><span style="color: #7D9029">sizeof</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">int</span><span style="border: 1px solid #FF0000">));</span> <span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Nombre</span> <span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">octet</span> <span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">crit</span> <span style="color: #7D9029">dans</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">fils</span><span style="border: 1px solid #FF0000">*/</span>
+							<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">total_size_send</span> <span style="border: 1px solid #FF0000">+=</span> <span style="border: 1px solid #FF0000">*</span><span style="color: #7D9029">val_Ecrite</span><span style="border: 1px solid #FF0000">;</span>
+						<span style="border: 1px solid #FF0000">}</span><span style="color: #7D9029">else</span><span style="border: 1px solid #FF0000">{</span> <span style="border: 1px solid #FF0000">/*</span><span style="color: #7D9029">Dans</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">cas</span> <span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">un</span> <span style="color: #7D9029">echec</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">l</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">ex</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">cution</span> <span style="border: 1px solid #FF0000">*/</span>
+							<span style="color: #7D9029">read</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">localPipe</span><span style="color: #BC7A00">[</span><span style="color: #666666">0</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&amp;</span><span style="color: #7D9029">val_Ecrite</span><span style="border: 1px solid #FF0000">,</span><span style="color: #7D9029">sizeof</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">int</span><span style="border: 1px solid #FF0000">));</span> <span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Nombre</span> <span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">octet</span> <span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">crit</span> <span style="color: #7D9029">:</span> <span style="color: #7D9029">ici</span> <span style="color: #7D9029">0</span> <span style="border: 1px solid #FF0000">*/</span>
+							<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">ret_code</span><span style="border: 1px solid #FF0000">);</span>
+							<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span> <span style="color: #7D9029">Internal</span> <span style="color: #7D9029">Server</span> <span style="color: #7D9029">Error</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;);</span> <span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">ret_code =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">&quot;505&quot;</span><span style="border: 1px solid #FF0000">;</span>
+							<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">total_size_send</span> <span style="border: 1px solid #FF0000">+=</span><span style="color: #7D9029">write</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">connect</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">strlen</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">));</span>
+						<span style="border: 1px solid #FF0000">}</span>
+						
+					<span style="border: 1px solid #FF0000">}</span>
+				<span style="border: 1px solid #FF0000">}</span>
+			<span style="border: 1px solid #FF0000">}</span><span style="color: #7D9029">else</span> <span style="color: #7D9029">if</span> <span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">bRepertory</span><span style="border: 1px solid #FF0000">){</span>
+				<span style="border: 1px solid #FF0000">//</span><span style="color: #7D9029">Ecriture</span> <span style="color: #7D9029">des</span> <span style="color: #7D9029">infos</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">pertoire</span>
+				<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">A</span> <span style="color: #7D9029">FAIRE</span> <span style="border: 1px solid #FF0000">//</span> <span style="color: #7D9029">R</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">pertoire</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;);</span>
+				
+			<span style="border: 1px solid #FF0000">}</span>
+						
+		<span style="border: 1px solid #FF0000">}</span><span style="color: #7D9029">else</span> <span style="border: 1px solid #FF0000">{</span>		<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Traitement</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">l</span><span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">erreur</span> <span style="border: 1px solid #FF0000">*/</span>
+			<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">lu</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">Traitement</span> <span style="color: #7D9029">code</span> <span style="color: #7D9029">erreur</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,(</span><span style="color: #7D9029">long</span><span style="border: 1px solid #FF0000">)</span><span style="color: #7D9029">pthread_self</span><span style="border: 1px solid #FF0000">(),</span><span style="color: #7D9029">Errno</span><span style="border: 1px solid #FF0000">);</span>
+			<span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">STD_REP</span><span style="border: 1px solid #FF0000">);</span>
+			
+			<span style="color: #7D9029">switch</span> <span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">Errno</span><span style="border: 1px solid #FF0000">)</span> <span style="border: 1px solid #FF0000">{</span>
+				<span style="color: #7D9029">case</span> <span style="color: #7D9029">ENOENT:</span> <span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">404</span> <span style="color: #7D9029">Not</span> <span style="color: #7D9029">Found</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;);</span> <span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">ret_code =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">&quot;404&quot;</span><span style="border: 1px solid #FF0000">;</span> <span style="color: #7D9029">break</span><span style="border: 1px solid #FF0000">;</span>
+				<span style="color: #7D9029">case</span> <span style="color: #7D9029">EACCES:</span> <span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">403</span> <span style="color: #7D9029">Forbidden</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;);</span> <span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">ret_code =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">&quot;403&quot;</span> <span style="border: 1px solid #FF0000">;</span><span style="color: #7D9029">break</span><span style="border: 1px solid #FF0000">;</span>
+				<span style="color: #7D9029">default:</span> <span style="color: #7D9029">strcat</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">418</span> 	<span style="color: #7D9029">I</span><span style="border: 1px solid #FF0000">‚Äô</span><span style="color: #7D9029">m</span> <span style="color: #7D9029">a</span> <span style="color: #7D9029">teapot</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">r</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;);</span> <span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">ret_code =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">&quot;418&quot;</span><span style="border: 1px solid #FF0000">;</span>
+				
+			<span style="border: 1px solid #FF0000">}</span>
+			<span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">total_size_send</span> <span style="border: 1px solid #FF0000">+=</span> <span style="color: #7D9029">write</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">connect</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">strlen</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">DATA</span><span style="border: 1px solid #FF0000">));</span>
+		<span style="border: 1px solid #FF0000">}</span>
+		
+		<span style="border: 1px solid #FF0000">/*</span><span style="color: #7D9029">Enregistrement</span> <span style="color: #7D9029">des</span> <span style="color: #7D9029">informations</span> <span style="color: #7D9029">dans</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">fichier</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">log</span> <span style="border: 1px solid #FF0000">*/</span>
+		<span style="color: #7D9029">recordToLogFile</span><span style="border: 1px solid #FF0000">(&amp;</span><span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">);</span>
+		<span style="color: #7D9029">close</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">.</span><span style="color: #7D9029">connectfd</span><span style="border: 1px solid #FF0000">);</span>
+		
+		<span style="color: #7D9029">pthread_mutex_lock</span><span style="border: 1px solid #FF0000">(&amp;</span><span style="color: #7D9029">mutexConnexion</span><span style="border: 1px solid #FF0000">);</span>
+		<span style="color: #7D9029">nbTotalConnexion--</span><span style="border: 1px solid #FF0000">;</span>
+		<span style="color: #7D9029">pthread_mutex_unlock</span><span style="border: 1px solid #FF0000">(&amp;</span><span style="color: #7D9029">mutexConnexion</span><span style="border: 1px solid #FF0000">);</span>
+		
+		<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;%</span><span style="color: #7D9029">lu</span> <span style="border: 1px solid #FF0000">|</span> <span style="color: #7D9029">FIN</span> <span style="color: #7D9029">TRAITEMENT</span> <span style="color: #7D9029">de</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">d</span> <span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,(</span><span style="color: #7D9029">long</span><span style="border: 1px solid #FF0000">)</span><span style="color: #7D9029">pthread_self</span><span style="border: 1px solid #FF0000">(),</span><span style="color: #7D9029">connect</span><span style="border: 1px solid #FF0000">);</span>
+		<span style="color: #7D9029">pthread_exit</span><span style="border: 1px solid #FF0000">((</span><span style="color: #7D9029">void</span><span style="border: 1px solid #FF0000">*)</span><span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">);</span>
+	<span style="border: 1px solid #FF0000">}</span>
+		
+	
+
+<span style="border: 1px solid #FF0000">}</span>
+<span style="border: 1px solid #FF0000">/*</span>
+ <span style="border: 1px solid #FF0000">*</span>	<span style="color: #7D9029">Ecriture</span> <span style="color: #7D9029">vers</span> <span style="color: #7D9029">le</span> <span style="color: #7D9029">fichier</span> <span style="color: #7D9029">de</span> <span style="color: #7D9029">log</span>
+ <span style="border: 1px solid #FF0000">*</span>
+ <span style="border: 1px solid #FF0000">*/</span>
+<span style="color: #7D9029">void</span> <span style="color: #7D9029">recordToLogFile</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">struct</span> <span style="color: #7D9029">infoRequete</span> <span style="border: 1px solid #FF0000">*</span><span style="color: #7D9029">info</span><span style="border: 1px solid #FF0000">){</span>
+	
+	<span style="color: #7D9029">struct</span> <span style="color: #7D9029">tm</span> <span style="border: 1px solid #FF0000">*</span><span style="color: #7D9029">loctime</span><span style="border: 1px solid #FF0000">;</span>
+	<span style="color: #7D9029">char</span> <span style="color: #7D9029">date</span><span style="color: #BC7A00">[</span><span style="color: #666666">50</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">;</span>
+	<span style="color: #7D9029">char</span> <span style="color: #7D9029">record</span><span style="color: #BC7A00">[</span><span style="color: #666666">150</span><span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">;</span>
+	<span style="color: #7D9029">char</span> <span style="color: #7D9029">ip</span><span style="color: #BC7A00">[</span>INET_ADDRSTRLEN<span style="color: #BC7A00">]</span><span style="border: 1px solid #FF0000">;</span>
+	<span style="color: #7D9029">int</span> <span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">;</span>
+	
+	<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Repr</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">sentation</span> <span style="color: #7D9029">en</span> <span style="color: #7D9029">str</span> <span style="border: 1px solid #FF0000">*/</span>
+	<span style="color: #7D9029">inet_ntop</span><span style="border: 1px solid #FF0000">(</span> <span style="color: #7D9029">AF_INET</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&amp;</span><span style="color: #7D9029">info-</span><span style="color: #008000; font-weight: bold">&gt;</span>ipAddr, ip, INET_ADDRSTRLEN );
+	
+	/* Repr√©sentation locale du temps. */
+	loctime = localtime(<span style="color: #999999; font-weight: bold">&amp;info-&gt;curtime);</span>
+	
+	/* Ecriture de la date dans un format standard */
+	sprintf(date,&quot;%s&quot;,asctime(loctime));
+	date<span style="color: #BC7A00">[</span><span style="color: #666666">24</span><span style="color: #BC7A00">]</span> = 0;	/*D&#39;apr√®s le man, 26 caract√®re au total, on supprime ici le caract√®re \n pour le log. */
+		
+	printf(&quot;%s, taille %lu&quot;,date,strlen(date));
+	
+	sprintf(record,&quot;%s %s %d %lu %s %s %d\n&quot;,ip
+		,date
+		,info-&gt;pid
+		,(unsigned long)info-&gt;pthreadid
+		,info-&gt;line_request
+		,info-&gt;ret_code
+		,info-&gt;total_size_send);
+		
+	pthread_mutex_lock(<span style="color: #999999; font-weight: bold">&amp;mutexLogFile);</span>
+	if((n = write(logfd, record, strlen(record))) ==1){
+		pthread_mutex_unlock(<span style="color: #999999; font-weight: bold">&amp;mutexLogFile);</span>
+		perror(&quot;write record&quot;);
+		exit(EXIT_FAILURE);
+	}
+	pthread_mutex_unlock(<span style="color: #999999; font-weight: bold">&amp;mutexLogFile);</span>
+	
+	
+}
+
+
+/*
+ *	Recherche de l&#39;extension mime
+ *
+ */
+char *getMimeInfo(char *PATH_FILE){
+	/*Extraction de l&#39;extension */
+	/* A REFAIRE AVEC regexec */
+	const char *str_request = strrchr(PATH_FILE, &#39;.&#39;);
+	memmove((void*)str_request, str_request+1, strlen(str_request));
+	
+	/* On recherche l&#39;expression r√©guli√®re */
+	lseek(mimefd, 0, SEEK_SET);
+	FILE *file ;
+	int bStrOk = 1;
+	char line<span style="color: #BC7A00">[</span><span style="color: #666666">256</span><span style="color: #BC7A00">]</span>;
+	char *strtType;
+	char *strtContent;
+	char *strtResult;
+	
+	if((file = fdopen(mimefd, &quot;r&quot;)) == NULL){
+		perror(&quot;fdopen&quot;);
+		pthread_exit((void *)0);
+	} 
+
+	while (fgets(line, sizeof(line), file)) {
+		
+		/* On est √† la bonne ligne du fichier */
+		if(strstr(line, str_request) != NULL <span style="border: 1px solid #FF0000">&amp;&amp;</span> line<span style="color: #BC7A00">[</span><span style="color: #666666">0</span><span style="color: #BC7A00">]</span> != &#39;#&#39;) {
+			/* On conserve le premier type */
+			strtType = strtok(line, &quot;\t&quot;);
+			
+			strtContent = strtok(NULL, &quot;\t&quot;);
+		
+			while (bStrOk) {
+				
+				/* On sort de la boucle si c&#39;est le bon caract√®re */
+				if(strtContent == NULL)
+					break;
+			
+				strtResult = strtok(strtContent, &quot; &quot;);
+				while (bStrOk) {
+					if(strtResult == NULL)
+						break;
+					if(!strcmp(strtResult, str_request))
+						bStrOk = 0;
+					strtResult = strtok(NULL, &quot; &quot;);
+				}
+				if(bStrOk != 0)
+					strtContent = strtok(NULL, &quot;\t&quot;);
+			}
+			
+			/* A partir d&#39;ici nous sommes dans la bonne ligne */
+			if(strtResult != NULL <span style="border: 1px solid #FF0000">&amp;&amp;</span> bStrOk == 0){
+				break;
+			}
+			
+		}
+	}
+	char *ret;
+	ret = malloc(strlen(strtType)*sizeof(char));
+	memcpy(ret, strtType, strlen(strtType));
+	
+	return ret;
+}
+void traitSigAlarm(int sig){
+	kill(pidFils, SIGINT);
+}
+
+/*
+ *	Fermeture normale du serveur;
+ *
+ */
+void traitSignal(int sig){
+	if(SIGSEGV == sig)
+		printf(&quot;\nSignal fault re√ßu\n&quot;);
+	else
+		printf(&quot;\nSignal int ou autre re√ßu\n&quot;);
+	
+	if (shutdown(socketfd, SHUT_RDWR) <span style="color: #008000; font-weight: bold">&lt; 0</span><span style="border: 1px solid #FF0000">)</span> <span style="border: 1px solid #FF0000">//</span> <span style="color: #7D9029">secondly</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">terminate</span> <span style="color: #7D9029">the</span> <span style="border: 1px solid #FF0000">&#39;</span><span style="color: #7D9029">reliable</span><span style="border: 1px solid #FF0000">&#39;</span> <span style="color: #7D9029">delivery</span>
+		<span style="color: #7D9029">if</span> <span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">errno</span> <span style="border: 1px solid #FF0000">!=</span> <span style="color: #7D9029">ENOTCONN</span> <span style="border: 1px solid #FF0000">&amp;&amp;</span> <span style="color: #7D9029">errno</span> <span style="border: 1px solid #FF0000">!=</span> <span style="color: #7D9029">EINVAL</span><span style="border: 1px solid #FF0000">)</span> <span style="border: 1px solid #FF0000">//</span> <span style="color: #7D9029">SGI</span> <span style="color: #7D9029">causes</span> <span style="color: #7D9029">EINVAL</span>
+			<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">shutdown</span><span style="border: 1px solid #FF0000">&quot;);</span>
+	<span style="color: #7D9029">if</span> <span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">close</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">socketfd</span><span style="border: 1px solid #FF0000">)</span> <span style="border: 1px solid #FF0000">&lt;</span> <span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">)</span> <span style="border: 1px solid #FF0000">//</span> <span style="color: #7D9029">finally</span> <span style="color: #7D9029">call</span> <span style="color: #7D9029">close</span><span style="border: 1px solid #FF0000">()</span>
+		<span style="color: #7D9029">perror</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">close</span><span style="border: 1px solid #FF0000">&quot;);</span>
+	<span style="color: #7D9029">exit</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">0</span><span style="border: 1px solid #FF0000">);</span>
+<span style="border: 1px solid #FF0000">}</span>
+
+
+<span style="color: #7D9029">int</span> <span style="color: #7D9029">main</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">int</span> <span style="color: #7D9029">argc</span><span style="border: 1px solid #FF0000">,</span> <span style="color: #7D9029">char</span> <span style="border: 1px solid #FF0000">*</span><span style="color: #7D9029">argv</span><span style="color: #BC7A00">[]</span><span style="border: 1px solid #FF0000">)</span> <span style="border: 1px solid #FF0000">{</span>
+	
+	<span style="color: #7D9029">if</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">argc</span> <span style="border: 1px solid #FF0000">&lt;</span><span style="color: #7D9029">3</span><span style="border: 1px solid #FF0000">){</span>
+		<span style="color: #7D9029">fprintf</span><span style="border: 1px solid #FF0000">(</span><span style="color: #7D9029">stderr</span><span style="border: 1px solid #FF0000">,</span> <span style="border: 1px solid #FF0000">&quot;</span><span style="color: #7D9029">usage</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">s</span> <span style="border: 1px solid #FF0000">&lt;</span><span style="color: #7D9029">port</span><span style="color: #008000; font-weight: bold">&gt;</span> <span style="color: #008000; font-weight: bold">&lt;client</span> <span style="color: #7D9029">max</span><span style="color: #008000; font-weight: bold">&gt;</span> <span style="color: #008000; font-weight: bold">&lt;other</span> <span style="color: #7D9029">number</span><span style="color: #008000; font-weight: bold">&gt;</span>&quot;,argv<span style="color: #BC7A00">[</span><span style="color: #666666">0</span><span style="color: #BC7A00">]</span>);
+		exit(-1);
+	}
+	/* Ouverture des informations de log */
+	//On convient de placer ce fichier dans le r√©pertoire /tmp, avec comme nom votre identifiant √† 7 chiffres pr√©c√©d√© de &quot;http&quot; et suivi de &quot;.log&quot;.
+	if((logfd = open(&quot;./tmp/http3504018.log&quot;, O_CREAT | O_RDWR | O_APPEND, S_IRUSR|S_IRGRP|S_IROTH|S_IWUSR)) == -1){
+		perror(&quot;mime open&quot;);
+		exit(-1);
+	}
+	
+	/* Ouverture du fichier mime */
+	if((mimefd = open(&quot;./mime.types&quot;, O_RDONLY, S_IRUSR|S_IRGRP|S_IROTH)) == -1){
+		perror(&quot;mime open&quot;);
+		exit(-1);
+	}
+		
+	/* Cr√©ation de la socket */
+	if((socketfd = socket(AF_INET,SOCK_STREAM,0)) == -1){
+		perror(&quot;Cr√©ation socket probl√®me &quot;);
+		exit(-1);
+	}
+	
+	/*R√©cup√©ration du r√©pertoire de travail */
+	getcwd(CWD, sizeof(CWD));
+	printf(&quot;R√©pertoire courant : %s\n&quot;, CWD);
+	
+	/* R√©cup√©ration du nombre max de client */
+	MAXCLIENT = atoi(argv<span style="color: #BC7A00">[</span><span style="color: #666666">2</span><span style="color: #BC7A00">]</span>);
+	printf(&quot;Nombre total de connexion :%d\n&quot;,MAXCLIENT);
+		
+	/* Pr√©paration de l&#39;adresse d&#39;attachement */
+	adr.sin_family = AF_INET;
+	adr.sin_addr.s_addr = htonl(INADDR_ANY);
+	adr.sin_port = htons(atoi(argv<span style="color: #BC7A00">[</span><span style="color: #666666">1</span><span style="color: #BC7A00">]</span>));
+	
+	action.sa_handler = traitSignal;
+	sigaction(SIGINT, <span style="border: 1px solid #FF0000">&amp;</span>action, NULL);
+	printf(&quot;Configuration signaux : OK\n&quot;);
+	printf(&quot;PID du serveur principal : %d\n&quot;, getpid());
+	/* Attachement de la socket */
+	if (bind(socketfd, (struct sockaddr *)<span style="border: 1px solid #FF0000">&amp;</span>adr,adr_len)==-1){
+		perror(&quot;Attachement impossible &quot;);
+		exit(-1);
+	}
+	
+	/* ouverture du service */
+	if(listen(socketfd, 0) == -1){
+		perror(&quot;listen impossible &quot;);
+		exit(-1);
+	}
+	
+	/* Boucle de traitement */
+	while(1){
+		
+		connexion = accept(socketfd, (struct sockaddr *)<span style="border: 1px solid #FF0000">&amp;</span>adr, <span style="color: #999999; font-weight: bold">&amp;adr_len);</span>
+		
+		if (connexion == -1) {
+			if(errno == EINTR) continue; //Int√©ruption d&#39;appel, on continue
+			else {	//Trop grave, on quitte.
+				perror(&quot;accept&quot;);
+				exit(-1);
+			}
+		}
+		pthread_mutex_lock(<span style="color: #999999; font-weight: bold">&amp;mutexConnexion);</span>
+		if(nbTotalConnexion <span style="color: #008000; font-weight: bold">&lt; MAXCLIENT</span><span style="border: 1px solid #FF0000">){</span>
+			<span style="color: #7D9029">nbTotalConnexion</span><span style="border: 1px solid #FF0000">++;</span>
+			<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">NOMBRE</span> <span style="color: #7D9029">TOTAL</span> <span style="color: #7D9029">DE</span> <span style="color: #7D9029">CONNEXION</span> <span style="color: #7D9029">ACTUALISE</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,</span> <span style="color: #7D9029">nbTotalConnexion</span><span style="border: 1px solid #FF0000">);</span>
+			<span style="color: #7D9029">printf</span><span style="border: 1px solid #FF0000">(&quot;</span><span style="color: #7D9029">Num</span><span style="border: 1px solid #FF0000">√©</span><span style="color: #7D9029">ro</span> <span style="color: #7D9029">du</span> <span style="color: #7D9029">descripteur</span> <span style="color: #7D9029">:</span> <span style="border: 1px solid #FF0000">%</span><span style="color: #7D9029">d</span><span style="border: 1px solid #FF0000">\</span><span style="color: #7D9029">n</span><span style="border: 1px solid #FF0000">&quot;,</span><span style="color: #7D9029">connexion</span><span style="border: 1px solid #FF0000">);</span>
+			<span style="color: #7D9029">pthread_mutex_unlock</span><span style="border: 1px solid #FF0000">(&amp;</span><span style="color: #7D9029">mutexConnexion</span><span style="border: 1px solid #FF0000">);</span>
+			
+			<span style="border: 1px solid #FF0000">/*</span> <span style="color: #7D9029">Informations</span> <span style="color: #7D9029">pour</span> <span style="color: #7D9029">traitement</span> <span style="color: #7D9029">et</span> <span style="color: #7D9029">journalisation</span> <span style="border: 1px solid #FF0000">*/</span>
+			<span style="color: #7D9029">info =</span><span style="border: 1px solid #FF0000"> </span><span style="color: #BA2121">malloc(sizeof(struct</span> <span style="color: #7D9029">infoRequete</span><span style="border: 1px solid #FF0000">));</span>
+			<span style="color: #7D9029">info-</span><span style="color: #008000; font-weight: bold">&gt;</span>connectfd = connexion;
+			struct sockaddr_in* pV4Addr = (struct sockaddr_in*)<span style="color: #999999; font-weight: bold">&amp;adr;</span>
+			info-&gt;ipAddr = pV4Addr-&gt;sin_addr;
+			info-&gt;curtime = time (NULL);
+			info-&gt;pid = getpid();
+			
+			printf(&quot;LANCEMENT %d\n&quot;,info-&gt;connectfd);
+			
+			pthread_create(<span style="color: #999999; font-weight: bold">&amp;pidThread,NULL,(void*)funcTraitement,info);</span>
+		}else{
+			//Message de rejet
+			printf(&quot;PASSAGE ELSE\n&quot;);
+			close(connexion);
+			
+		}
+		
+		pthread_mutex_unlock(<span style="color: #999999; font-weight: bold">&amp;mutexConnexion);</span>
+	}
+}
+</pre></div>
+</body>
+</html>
