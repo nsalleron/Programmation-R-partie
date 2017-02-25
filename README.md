@@ -2,6 +2,6 @@
 
 Un résumé est disponible [ici](https://github.com/nsalleron/Programmation-Repartie/blob/master/Docs/PR.pdf) !
 
-[![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is AWESOME")
+[![CardWatch Galerie Image](https://www.youtube.com/upload_thumbnail?v=bfVpBnFPXK8&t=hqdefault&ts=1488050142301)](https://www.youtube.com/embed/bfVpBnFPXK8 )
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bfVpBnFPXK8" frameborder="0" allowfullscreen></iframe>
+
